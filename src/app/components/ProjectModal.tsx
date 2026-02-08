@@ -107,7 +107,7 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-            <div className="absolute bottom-0 left-0 w-full p-6 sm:p-12 2xl:px-[400px] flex justify-start text-left">
+            <div className="absolute bottom-0 left-0 w-full p-6 sm:p-12 xl:px-[350px] 2xl:px-[400px] flex justify-start text-left">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -130,7 +130,7 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
           </div>
 
           {/* Single Column Content */}
-          <div className="px-6 py-16 sm:px-12 2xl:px-[400px] max-w-none">
+          <div className="px-6 py-16 sm:px-12 xl:px-[350px] 2xl:px-[400px] max-w-none">
 
             {/* Project Meta Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-16 pb-12 border-b border-gray-100">

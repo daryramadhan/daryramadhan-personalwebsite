@@ -9,12 +9,12 @@ export function SelectedWork() {
   // Filter selected works
   // Logic: If it has project_type 'selected_work', OR if it's NOT a case study (legacy fallback)
   const selectedWorks = projects.filter((p, i) =>
-    p.project_type === 'selected_work' || (!p.project_type && i >= 3)
+    p.is_published !== false && (p.project_type === 'selected_work' || (!p.project_type && i >= 3))
   );
 
   return (
-    <section id="projects" className="py-32 bg-gray-50">
-      <div className="max-w-[1920px] mx-auto w-full px-4 sm:px-8">
+    <section id="projects" className="py-24 bg-gray-50">
+      <div className="max-w-[1440px] mx-auto w-full px-6 sm:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
 
           {/* Left Column: Sticky Title & Info (Matches Hero Logic) */}
@@ -23,7 +23,7 @@ export function SelectedWork() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gray-900 mb-8"
+              className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-gray-900 mb-8"
             >Selected <br /> Works</motion.h2>
 
             <motion.div

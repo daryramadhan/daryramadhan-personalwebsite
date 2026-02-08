@@ -22,6 +22,7 @@ export function ProjectEditor() {
         role: '',
         client: '',
         className: '', // For grid layout
+        is_published: true, // Default
     });
 
     useEffect(() => {
@@ -40,6 +41,7 @@ export function ProjectEditor() {
                     role: project.role || '',
                     client: project.client || '',
                     className: project.className || '',
+                    is_published: project.is_published ?? true,
                 })
             } else {
                 // Try fetching from supabase
@@ -62,6 +64,7 @@ export function ProjectEditor() {
                             role: data.role || '',
                             client: data.client || '',
                             className: data.class_name || '', // Map class_name from DB to className in form
+                            is_published: data.is_published ?? true,
                         });
                     }
                 };
@@ -83,6 +86,7 @@ export function ProjectEditor() {
                 role: formData.role,
                 client: formData.client,
                 class_name: formData.className, // Map form className to DB class_name
+                is_published: formData.is_published,
                 // updated_at: new Date().toISOString(), // Column not in DB yet
             };
 
@@ -288,6 +292,20 @@ export function ProjectEditor() {
                                     <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
                                 </div>
                             )}
+                        </div>
+
+                        <div className="pt-4 border-t border-gray-100">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-medium text-gray-600">Visible on Site</span>
+                                <button
+                                    onClick={() => setFormData(prev => ({ ...prev, is_published: !prev.is_published }))}
+                                    className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.is_published ? 'bg-black' : 'bg-gray-200'}`}
+                                >
+                                    <span
+                                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.is_published ? 'translate-x-5' : 'translate-x-0'}`}
+                                    />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -21,7 +21,7 @@ export function CaseStudies() {
   // Filter only the case studies (supporting both new dynamic type and legacy static slice)
   // Logic: If it has project_type 'case_study', OR if it's one of the first 3 static items (legacy)
   const caseStudies = projects.filter((p, i) =>
-    p.project_type === 'case_study' || (!p.project_type && i < 3)
+    p.is_published !== false && (p.project_type === 'case_study' || (!p.project_type && i < 3))
   );
   const totalSlides = caseStudies.length + 1; // +1 for "View All" card
 
@@ -44,7 +44,7 @@ export function CaseStudies() {
 
   return (
     <section id="case-studies" className="py-12 bg-white border-t border-gray-100 overflow-hidden">
-      <div className="max-w-[1920px] mx-auto w-full px-4 sm:px-8">
+      <div className="max-w-[1440px] mx-auto w-full px-6 sm:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* Left Column: Sticky Title & Info */}
@@ -54,7 +54,7 @@ export function CaseStudies() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gray-900 mb-4"
+                className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-gray-900 mb-4"
               >Case <br /> Studies</motion.h2>
 
               <motion.div

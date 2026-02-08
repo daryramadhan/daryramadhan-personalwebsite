@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Edit, Trash2, Eye } from 'lucide-react';
 
 export function Dashboard() {
-    const { projects, loading, deleteProject } = useProjects();
+    const { projects, loading, deleteProject, togglePublish } = useProjects();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [projectToDelete, setProjectToDelete] = useState<any>(null); // Using any to avoid importing Project type duplication for now
 
@@ -47,6 +47,7 @@ export function Dashboard() {
                             <th className="px-6 py-4">Type</th>
                             <th className="px-6 py-4">Category</th>
                             <th className="px-6 py-4">Year</th>
+                            <th className="px-6 py-4 text-center">Status</th>
                             <th className="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -66,6 +67,18 @@ export function Dashboard() {
                                 </td>
                                 <td className="px-6 py-4 text-gray-500">{project.category}</td>
                                 <td className="px-6 py-4 text-gray-500 font-mono text-sm">{project.year}</td>
+                                <td className="px-6 py-4">
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={() => togglePublish(project.id, project.is_published ?? true)}
+                                            className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 ${project.is_published !== false ? 'bg-black' : 'bg-gray-200'}`}
+                                        >
+                                            <span
+                                                className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${project.is_published !== false ? 'translate-x-5' : 'translate-x-0'}`}
+                                            />
+                                        </button>
+                                    </div>
+                                </td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button className="p-2 text-gray-400 hover:text-black hover:bg-gray-100 rounded-md transition-colors" title="View">

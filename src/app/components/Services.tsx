@@ -11,8 +11,8 @@ const stats = [
 
 export function Services() {
   return (
-    <section className="py-32 bg-black text-white">
-      <div className="max-w-[1920px] mx-auto w-full px-4 sm:px-8">
+    <section className="py-24 bg-black text-white">
+      <div className="max-w-[1440px] mx-auto w-full px-6 sm:px-12">
 
         {/* Top Section: Heading and Description */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 border-t border-white/20 pt-12">
@@ -24,7 +24,7 @@ export function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-4xl md:text-5xl lg:text-7xl font-medium tracking-tight leading-[1.1]"
+              className="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.1]"
             >
               As your design partner, I help founders and business owners build great, scalable products.
             </motion.h2>

@@ -61,8 +61,8 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 py-8 px-4 sm:px-8 mix-blend-difference text-white">
-        <div className="max-w-[1920px] mx-auto w-full grid grid-cols-2 md:grid-cols-12 items-baseline">
+      <nav className="fixed top-0 left-0 right-0 z-50 py-8 px-6 sm:px-12 mix-blend-difference text-white">
+        <div className="max-w-[1440px] mx-auto w-full grid grid-cols-2 md:grid-cols-12 items-baseline">
 
           {/* Left: Brand */}
           <div className="col-span-1 md:col-span-3">

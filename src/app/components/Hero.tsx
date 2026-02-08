@@ -17,8 +17,8 @@ export function Hero() {
     mouseY.set(e.clientY - 65);
   };
   return (
-    <section id="about" className="relative min-h-screen flex flex-col justify-end pb-20 pt-32 bg-gray-50/50">
-      <div className="max-w-[1920px] mx-auto w-full px-4 sm:px-8">
+    <section id="about" className="relative min-h-[90vh] flex flex-col justify-end pb-20 pt-32 bg-gray-50/50">
+      <div className="max-w-[1440px] mx-auto w-full px-6 sm:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
 
           {/* Left Column: Description & Date */}
@@ -56,7 +56,7 @@ export function Hero() {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
               onMouseMove={handleMouseMove}
-              className="text-5xl md:text-7xl lg:text-[6.5rem] leading-[0.9] font-medium tracking-tight text-gray-900 cursor-none"
+              className="text-4xl md:text-6xl lg:text-[5.5rem] leading-[0.95] font-medium tracking-tight text-gray-900 cursor-none"
             >
               High-Agency Product Designer with <br />Emphaty currently <br />based in Jakarta
             </motion.h1>

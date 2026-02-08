@@ -63,7 +63,28 @@ export function useProjects() {
         }
     };
 
-    return { projects, loading, deleteProject };
+    const togglePublish = async (id: string, currentStatus: boolean) => {
+        try {
+            const nextStatus = !currentStatus;
+            const { error } = await supabase
+                .from('projects')
+                .update({ is_published: nextStatus })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            // Update local state
+            setProjects(prev => prev.map(p =>
+                p.id === id ? { ...p, is_published: nextStatus } : p
+            ));
+            return true;
+        } catch (err) {
+            console.error('Error toggling publish status:', err);
+            return false;
+        }
+    };
+
+    return { projects, loading, deleteProject, togglePublish };
 }
 
 // Helper to map DB project to Frontend Project interface

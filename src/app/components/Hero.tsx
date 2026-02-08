@@ -79,7 +79,7 @@ export function Hero() {
               className="w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white shadow-xl"
             >
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
+                src="src/styles/images/daryramadhan.png"
                 alt="Profile"
                 className="w-full h-full object-cover"
               />

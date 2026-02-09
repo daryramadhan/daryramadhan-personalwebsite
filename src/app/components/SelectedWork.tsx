@@ -37,11 +37,11 @@ export function SelectedWork() {
                 A curated selection of projects that showcase my passion for clean design, interactivity, and user-centric problem solving.
               </p>
 
-              <div className="flex items-center gap-4">
+              {/* <div className="flex items-center gap-4">
                 <a href="#" className="inline-flex items-center text-sm font-medium text-black border-b border-black pb-0.5 hover:opacity-70 transition-opacity">
                   View Archive
                 </a>
-              </div>
+              </div> */}
             </motion.div>
           </div>
 

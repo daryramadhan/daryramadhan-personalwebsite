@@ -120,7 +120,7 @@ export function Navbar() {
           {/* Right: Secondary Links (Desktop) */}
           <div className="hidden md:flex col-span-3 justify-end items-baseline gap-8 text-xs md:text-sm font-medium uppercase tracking-wide">
             <a href="/daryramadhan-resume.pdf" download="Dary Ramadhan - Resume 2026.pdf" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity text-gray-400 hover:text-white">Download Latest Resume</a>
-            <a href="mailto:hello@daryramadhan.com" className="hover:opacity-70 transition-opacity cursor-pointer">Schedule CALL</a>
+            <a href="https://cal.com/daryramadhan/discovery-call" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity cursor-pointer">Schedule CALL</a>
           </div>
 
           {/* Mobile Menu Button */}

@@ -79,7 +79,7 @@ export function Hero() {
               className="w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white shadow-xl"
             >
               <img
-                src="/daryramadhan.png"
+                src="public/daryramadhan.png"
                 alt="Profile"
                 className="w-full h-full object-cover"
               />

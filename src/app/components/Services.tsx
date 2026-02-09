@@ -51,7 +51,7 @@ export function Services() {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <a
-                  href="mailto:hello@daryramadhan.com"
+                  href="https://cal.com/daryramadhan/discovery-call" target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-8 py-4 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 group"
                 >
                   <span>Schedule a call</span>

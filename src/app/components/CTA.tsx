@@ -27,7 +27,7 @@ export function CTA() {
               className="flex flex-col items-start"
             >
               <a
-                href="mailto:hello@daryramadhan.com"
+                href="https://cal.com/daryramadhan/discovery-call" target="_blank" rel="noopener noreferrer"
                 className="group relative inline-block"
               >
                 <h2 className="text-6xl md:text-8xl lg:text-9xl font-medium tracking-tighter hover:text-gray-300 transition-colors duration-300">
@@ -55,7 +55,7 @@ export function CTA() {
               </div>
 
               <motion.a
-                href="mailto:hello@daryramadhan.com"
+                href="https://cal.com/daryramadhan/discovery-call" target="_blank" rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="mt-16 inline-flex items-center gap-4 px-8 py-4 border border-white/20 rounded-full hover:bg-white hover:text-black transition-colors duration-300"

@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="bg-black text-white pt-0 pb-12">
       <div className="max-w-[1920px] mx-auto w-full px-4 sm:px-8">
         <div className="border-t border-white/20 pt-8 flex flex-col-reverse md:flex-row justify-between items-start md:items-center gap-8 md:gap-6">
-          
+
           {/* Left: Copyright */}
           <div className="flex flex-col gap-1">
             <span className="text-xl font-bold tracking-tight">Dary Ramadhan</span>
@@ -18,13 +18,13 @@ export function Footer() {
           </div>
 
           {/* Center: Legal Links */}
-          <div className="flex gap-6 text-sm text-gray-400">
+          {/* <div className="flex gap-6 text-sm text-gray-400">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Conditions</a>
-          </div>
+          </div> */}
 
           {/* Right: Back to Top */}
-          <button 
+          <button
             onClick={scrollToTop}
             className="group flex items-center gap-2 text-sm font-medium hover:text-gray-300 transition-colors"
           >
@@ -34,7 +34,7 @@ export function Footer() {
             </div>
           </button>
         </div>
-        
+
         {/* Big Name Watermark (Optional, adds style) */}
         <div className="mt-24 select-none pointer-events-none">
           <h1 className="text-[18vw] leading-none font-bold text-white/5 text-center tracking-tighter whitespace-nowrap overflow-hidden select-none pointer-events-none -mb-4 md:-mb-8">

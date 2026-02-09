@@ -152,7 +152,7 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
                     key={i}
                     className="w-full rounded-sm overflow-hidden bg-gray-50 shadow-sm"
                   >
-                    <img src={img} alt={`Detail ${i + 1}`} className="w-full h-auto object-cover" />
+                    <img src={img} alt={`Detail ${i + 1}`} loading="lazy" className="w-full h-auto object-cover" />
                   </motion.div>
                 ))}
 

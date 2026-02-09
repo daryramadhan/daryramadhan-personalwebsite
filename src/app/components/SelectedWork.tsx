@@ -61,13 +61,14 @@ export function SelectedWork() {
                     <img
                       src={project.image}
                       alt={project.title}
+                      loading="lazy"
                       className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
                     />
 
                     {/* Overlay - Minimalist Style */}
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/80 to-transparent">
+                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/90 via-black/50 to-transparent md:from-black/80 md:via-transparent">
                       <div className="flex justify-between items-end">
                         <div className="text-white">
                           <span className="text-xs font-mono uppercase tracking-wider opacity-80 mb-2 block">{project.category} — {project.year}</span>

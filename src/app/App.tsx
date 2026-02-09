@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useMatch, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
 import { Navbar } from './components/Navbar';
@@ -11,10 +11,12 @@ import { Footer } from './components/Footer';
 import { ProjectModal } from './components/ProjectModal';
 
 import { AuthProvider } from './context/AuthContext';
-import { Login } from './pages/admin/Login';
-import { AdminLayout } from './layouts/AdminLayout';
-import { Dashboard } from './pages/admin/Dashboard';
-import { ProjectEditor } from './pages/admin/ProjectEditor';
+
+// Lazy load admin components to reduce initial bundle size
+const Login = lazy(() => import('./pages/admin/Login').then(m => ({ default: m.Login })));
+const AdminLayout = lazy(() => import('./layouts/AdminLayout').then(m => ({ default: m.AdminLayout })));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard').then(m => ({ default: m.Dashboard })));
+const ProjectEditor = lazy(() => import('./pages/admin/ProjectEditor').then(m => ({ default: m.ProjectEditor })));
 
 // Separate component to handle the conditional modal rendering inside the Router context
 function AppContent() {
@@ -48,19 +50,21 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/*" element={<AppContent />} />
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-white"><div className="animate-pulse text-gray-400">Loading...</div></div>}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/*" element={<AppContent />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="create" element={<ProjectEditor />} />
-            <Route path="edit/:id" element={<ProjectEditor />} />
-          </Route>
-        </Routes>
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="create" element={<ProjectEditor />} />
+              <Route path="edit/:id" element={<ProjectEditor />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </AuthProvider>
     </Router>
   );

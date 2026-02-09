@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { projects, Project } from '../data/projects';
-import { supabase } from '../lib/supabase';
+import { Project } from '../data/projects';
+import { useProjects } from '../hooks/useProjects';
 
 interface ProjectModalProps {
   projectId: string;
@@ -12,34 +12,15 @@ interface ProjectModalProps {
 export function ProjectModal({ projectId }: ProjectModalProps) {
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
+  const { projects } = useProjects();
 
-  const [dynamicProject, setDynamicProject] = useState<Project | null>(null);
+  const project = projects.find(p => p.id === projectId);
 
+  // Calculate next project
   const projectIndex = projects.findIndex(p => p.id === projectId);
-  const staticProject = projectIndex !== -1 ? projects[projectIndex] : null;
-  const project = staticProject || dynamicProject;
-
-  // Calculate next project (fallback to first project if dynamic)
-  const nextProject = projectIndex !== -1
+  const nextProject = projectIndex !== -1 && projects.length > 1
     ? projects[(projectIndex + 1) % projects.length]
-    : projects[0];
-
-  useEffect(() => {
-    if (!staticProject && projectId) {
-      const fetchProject = async () => {
-        const { data } = await supabase
-          .from('projects')
-          .select('*')
-          .eq('id', projectId)
-          .single();
-
-        if (data) {
-          setDynamicProject(data as Project);
-        }
-      };
-      fetchProject();
-    }
-  }, [projectId, staticProject]);
+    : null;
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -56,9 +37,11 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
   };
 
   const handleNextProject = () => {
-    navigate(`/project/${nextProject.id}`);
-    if (modalRef.current) {
-      modalRef.current.scrollTop = 0;
+    if (nextProject) {
+      navigate(`/project/${nextProject.id}`);
+      if (modalRef.current) {
+        modalRef.current.scrollTop = 0;
+      }
     }
   };
 
@@ -103,7 +86,7 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
             <img
               src={project.image}
               alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover object-top"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
@@ -179,26 +162,28 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
           </div>
 
           {/* Next Project Teaser */}
-          <div
-            onClick={handleNextProject}
-            className="relative w-full h-[45vh] rounded-t-[1rem] bg-black cursor-pointer group overflow-hidden"
-          >
-            <img
-              src={nextProject.image}
-              alt="Next Project"
-              className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-40 transition-opacity duration-500"
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10 p-4 text-center">
-              <span className="text-xs font-mono uppercase tracking-wider mb-4 opacity-70">Next Project</span>
-              <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-8 group-hover:scale-105 transition-transform duration-700 ease-out">
-                {nextProject.title}
-              </h2>
-              <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/30 rounded-full group-hover:bg-white group-hover:text-black transition-all duration-300">
-                <span>View Case Study</span>
-                <ArrowRight size={18} />
+          {nextProject && (
+            <div
+              onClick={handleNextProject}
+              className="relative w-full h-[45vh] rounded-t-[1rem] bg-black cursor-pointer group overflow-hidden"
+            >
+              <img
+                src={nextProject.image}
+                alt="Next Project"
+                className="absolute inset-0 w-full h-full object-cover object-top opacity-50 group-hover:opacity-40 transition-opacity duration-500"
+              />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10 p-4 text-center">
+                <span className="text-xs font-mono uppercase tracking-wider mb-4 opacity-70">Next Project</span>
+                <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-8 group-hover:scale-105 transition-transform duration-700 ease-out">
+                  {nextProject.title}
+                </h2>
+                <div className="inline-flex items-center gap-2 px-6 py-3 border border-white/30 rounded-full group-hover:bg-white group-hover:text-black transition-all duration-300">
+                  <span>View Case Study</span>
+                  <ArrowRight size={18} />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </motion.div>
     </div>

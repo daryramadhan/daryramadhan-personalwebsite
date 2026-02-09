@@ -17,6 +17,12 @@ export default defineConfig({
     },
   },
 
+  // Build configuration for cross-browser compatibility
+  build: {
+    target: ['es2020', 'chrome87', 'firefox78', 'safari14', 'edge88'],
+    cssTarget: ['chrome87', 'firefox78', 'safari14', 'edge88'],
+  },
+
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
 })

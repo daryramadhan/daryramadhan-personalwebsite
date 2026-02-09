@@ -122,10 +122,52 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Cross-browser box-sizing */
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
   }
 
   body {
     @apply bg-background text-foreground;
+    /* Safari text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Safe area for notched devices */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Cross-browser smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Safari backdrop-filter fallback */
+  .backdrop-blur-sm,
+  .backdrop-blur-md {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Cross-browser selection styling */
+  ::selection {
+    background-color: #111827;
+    color: #ffffff;
+  }
+
+  ::-moz-selection {
+    background-color: #111827;
+    color: #ffffff;
+  }
+
+  /* Safari input styling */
+  input,
+  textarea,
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 
   /**

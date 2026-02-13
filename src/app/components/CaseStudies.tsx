@@ -43,7 +43,7 @@ export function CaseStudies() {
   }, [emblaApi, onSelect]);
 
   return (
-    <section id="case-studies" className="py-12 bg-white border-t border-gray-100 overflow-hidden">
+    <section id="case-studies" className="py-24 bg-white border-t border-gray-100 overflow-hidden">
       <div className="max-w-[1440px] mx-auto w-full px-6 sm:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 

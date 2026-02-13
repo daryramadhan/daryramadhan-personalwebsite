@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, LayoutDashboard, PlusCircle } from 'lucide-react';
+import { LogOut, LayoutDashboard, PlusCircle, Handshake } from 'lucide-react';
 
 export function AdminLayout() {
     const { user, loading, signOut } = useAuth();
@@ -45,6 +45,13 @@ export function AdminLayout() {
                     >
                         <PlusCircle size={18} />
                         <span>New Project</span>
+                    </Link>
+                    <Link
+                        to="/admin/partners"
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive('/admin/partners') ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-black hover:bg-gray-100'}`}
+                    >
+                        <Handshake size={18} />
+                        <span>Partners</span>
                     </Link>
                 </nav>
 

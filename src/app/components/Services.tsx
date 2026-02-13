@@ -5,8 +5,8 @@ import { ArrowRight } from 'lucide-react';
 const stats = [
   { value: '20+', label: 'Satisfied Clients' },
   { value: '42', label: 'Projects' },
-  { value: '4', label: 'Different Industries' },
-  { value: '4', label: 'Collaborators' },
+  { value: '4', label: 'Industries' },
+  { value: '4.7', label: 'Fastwork Rating' },
 ];
 
 export function Services() {

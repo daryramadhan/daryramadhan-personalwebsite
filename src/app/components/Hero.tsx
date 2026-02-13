@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useSpring, useMotionValue } from 'motion/react';
 
-export function Hero() {
+export function Hero({ isWrapperMode = false }: { isWrapperMode?: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -17,7 +17,7 @@ export function Hero() {
     mouseY.set(e.clientY - 65);
   };
   return (
-    <section id="about" className="relative min-h-[90vh] flex flex-col justify-end pb-20 pt-32 bg-gray-50/50">
+    <section id="about" className={`relative flex flex-col justify-end pb-20 pt-32 bg-gray-50/50 ${isWrapperMode ? 'h-full' : 'min-h-[90vh]'}`}>
       <div className="max-w-[1440px] mx-auto w-full px-6 sm:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
 

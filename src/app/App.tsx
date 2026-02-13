@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useMatch, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
+import { HeroPartnersWrapper } from './components/HeroPartnersWrapper';
 import { CaseStudies } from './components/CaseStudies';
 import { SelectedWork } from './components/SelectedWork';
 import { Services } from './components/Services';
@@ -17,6 +17,7 @@ const Login = lazy(() => import('./pages/admin/Login').then(m => ({ default: m.L
 const AdminLayout = lazy(() => import('./layouts/AdminLayout').then(m => ({ default: m.AdminLayout })));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard').then(m => ({ default: m.Dashboard })));
 const ProjectEditor = lazy(() => import('./pages/admin/ProjectEditor').then(m => ({ default: m.ProjectEditor })));
+const PartnersManager = lazy(() => import('./pages/admin/PartnersManager').then(m => ({ default: m.PartnersManager })));
 
 // Separate component to handle the conditional modal rendering inside the Router context
 function AppContent() {
@@ -28,7 +29,7 @@ function AppContent() {
       <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-gray-900 selection:text-white">
         <Navbar />
         <main>
-          <Hero />
+          <HeroPartnersWrapper />
           <CaseStudies />
           <SelectedWork />
           <Services />
@@ -62,6 +63,7 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="create" element={<ProjectEditor />} />
               <Route path="edit/:id" element={<ProjectEditor />} />
+              <Route path="partners" element={<PartnersManager />} />
             </Route>
           </Routes>
         </Suspense>

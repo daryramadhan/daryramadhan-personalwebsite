@@ -78,7 +78,18 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 @theme inline {
+  --animate-marquee: marquee 30s linear infinite;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

@@ -136,7 +136,7 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
             {/* Overview / Blog Content */}
             <div className="space-y-16">
 
-              <div className="prose prose-lg prose-gray max-w-none [&_p]:min-h-[1em] [&_p:empty]:min-h-[1em]">
+              <div className="prose prose-lg prose-gray max-w-none [&_p]:min-h-[1em] [&_p:empty]:min-h-[1em] leading-loose">
                 {/* Render HTML content if it's from the editor, otherwise simple text */}
                 <div dangerouslySetInnerHTML={{ __html: project.description || '' }} />
               </div>

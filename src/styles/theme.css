@@ -232,3 +232,69 @@
     line-height: 1.5;
   }
 }
+
+/* Override Tailwind Typography for Blockquotes in the Tiptap Editor */
+.prose blockquote {
+  border-left: 4px solid #000000 !important;
+  padding-left: 1rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  padding-right: 1rem !important;
+  background-color: #f9fafb !important;
+  /* Tailwind gray-50 */
+  border-top-right-radius: 0.5rem !important;
+  border-bottom-right-radius: 0.5rem !important;
+  color: #111827 !important;
+  /* Tailwind gray-900 */
+  font-style: italic !important;
+  font-weight: 400 !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  quotes: none !important;
+}
+
+.prose blockquote p:first-of-type::before {
+  content: none !important;
+}
+
+.prose blockquote p:last-of-type::after {
+  content: none !important;
+}
+
+/* Tiptap Editor Global Overrides */
+.prose p {
+  line-height: 1.8 !important;
+  /* Looser line height so it isn't tight */
+  margin-bottom: 1.25em !important;
+  /* Space between paragraphs */
+  letter-spacing: 0.015em !important;
+  /* Slight tracking for readability */
+}
+
+/* Tiptap Task List Styles */
+ul[data-type="taskList"] {
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+ul[data-type="taskList"] p {
+  margin: 0 !important;
+}
+
+ul[data-type="taskList"] li {
+  display: flex !important;
+  align-items: flex-start;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+ul[data-type="taskList"] li>label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  margin-top: 0.25rem;
+  user-select: none;
+}
+
+ul[data-type="taskList"] li>div {
+  flex: 1 1 auto;
+}

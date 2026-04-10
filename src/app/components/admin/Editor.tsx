@@ -1,8 +1,13 @@
 import { useEditor, EditorContent } from '@tiptap/react';
+import { BubbleMenu } from '@tiptap/react/menus';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import Link from '@tiptap/extension-link';
+import BubbleMenuExtension from '@tiptap/extension-bubble-menu';
+import TaskItem from '@tiptap/extension-task-item';
+import TaskList from '@tiptap/extension-task-list';
+import { Bold, Italic, Link as LinkIcon, Heading1, Heading2, Quote, Image as ImageIcon, List, ListTodo } from 'lucide-react';
 
 import { supabase } from '../../lib/supabase';
 import { useRef, useState, useEffect } from 'react';
@@ -20,6 +25,11 @@ export function Editor({ content, onChange }: EditorProps) {
         extensions: [
             StarterKit,
             Image,
+            BubbleMenuExtension,
+            TaskList,
+            TaskItem.configure({
+                nested: true,
+            }),
             Link.configure({
                 openOnClick: false,
             }),
@@ -33,7 +43,7 @@ export function Editor({ content, onChange }: EditorProps) {
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-lg prose-gray max-w-none focus:outline-none min-h-[300px] [&_p]:min-h-[1em] [&_p:empty]:min-h-[1em]',
+                class: 'prose prose-lg prose-gray max-w-none focus:outline-none min-h-[300px] [&_p]:min-h-[1em] [&_p:empty]:min-h-[1em] leading-loose',
             },
         },
     });
@@ -93,44 +103,15 @@ export function Editor({ content, onChange }: EditorProps) {
     // Simple Toolbar
     return (
         <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-            <div className="border-b border-gray-100 bg-gray-50 p-2 flex gap-2 overflow-x-auto">
-                <button
-                    onClick={() => editor.chain().focus().toggleBold().run()}
-                    disabled={!editor.can().chain().focus().toggleBold().run()}
-                    className={`px-2 py-1 rounded text-sm font-medium ${editor.isActive('bold') ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-200'}`}
-                >
-                    Bold
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                    disabled={!editor.can().chain().focus().toggleItalic().run()}
-                    className={`px-2 py-1 rounded text-sm font-medium ${editor.isActive('italic') ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-200'}`}
-                >
-                    Italic
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={`px-2 py-1 rounded text-sm font-medium ${editor.isActive('heading', { level: 2 }) ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-200'}`}
-                >
-                    H2
-                </button>
-                <button
-                    onClick={() => {
-                        const url = window.prompt('URL');
-                        if (url) {
-                            editor.chain().focus().setLink({ href: url }).run();
-                        }
-                    }}
-                    className={`px-2 py-1 rounded text-sm font-medium ${editor.isActive('link') ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-200'}`}
-                >
-                    Link
-                </button>
+            <div className="border-b border-gray-100 bg-gray-50 p-2 flex gap-2 overflow-x-auto items-center">
                 <button
                     onClick={handleImageClick}
                     disabled={uploading}
-                    className="px-2 py-1 rounded text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+                    title="Upload Image"
+                    className="p-2 rounded text-sm font-medium text-gray-600 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-2"
                 >
-                    {uploading ? 'Uploading...' : 'Image'}
+                    <ImageIcon className="w-4 h-4" />
+                    {uploading ? 'Uploading...' : 'Insert Image'}
                 </button>
             </div>
             {/* Hidden File Input */}
@@ -141,6 +122,89 @@ export function Editor({ content, onChange }: EditorProps) {
                 className="hidden"
                 accept="image/*"
             />
+
+            {editor && (
+                <BubbleMenu
+                    editor={editor}
+                    className="flex bg-gray-900 text-white rounded-lg shadow-xl overflow-hidden py-1 px-1 gap-1 border border-gray-800"
+                >
+                    <button
+                        onClick={() => editor.chain().focus().toggleBold().run()}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('bold') ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Bold"
+                    >
+                        <Bold className="w-4 h-4" />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleItalic().run()}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('italic') ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Italic"
+                    >
+                        <Italic className="w-4 h-4" />
+                    </button>
+
+                    <div className="w-px h-6 bg-gray-700 my-auto mx-1"></div>
+
+                    <button
+                        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Heading 1"
+                    >
+                        <Heading1 className="w-4 h-4" />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Heading 2"
+                    >
+                        <Heading2 className="w-4 h-4" />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('blockquote') ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Quote"
+                    >
+                        <Quote className="w-4 h-4" />
+                    </button>
+
+                    <div className="w-px h-6 bg-gray-700 my-auto mx-1"></div>
+
+                    <button
+                        onClick={() => editor.chain().focus().toggleBulletList().run()}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('bulletList') ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Bullet List"
+                    >
+                        <List className="w-4 h-4" />
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleTaskList().run()}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('taskList') ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Task List"
+                    >
+                        <ListTodo className="w-4 h-4" />
+                    </button>
+
+                    <div className="w-px h-6 bg-gray-700 my-auto mx-1"></div>
+
+                    <button
+                        onClick={() => {
+                            if (editor.isActive('link')) {
+                                editor.chain().focus().unsetLink().run();
+                                return;
+                            }
+                            const url = window.prompt('URL');
+                            if (url) {
+                                editor.chain().focus().setLink({ href: url }).run();
+                            }
+                        }}
+                        className={`p-2 rounded hover:bg-gray-800 transition-colors ${editor.isActive('link') ? 'bg-gray-800 text-green-400' : ''}`}
+                        title="Link"
+                    >
+                        <LinkIcon className="w-4 h-4" />
+                    </button>
+                </BubbleMenu>
+            )}
+
             <div className="p-4">
                 <EditorContent editor={editor} />
             </div>

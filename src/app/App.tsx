@@ -19,8 +19,11 @@ const Dashboard = lazy(() => import('./pages/admin/Dashboard').then(m => ({ defa
 const ProjectEditor = lazy(() => import('./pages/admin/ProjectEditor').then(m => ({ default: m.ProjectEditor })));
 const PartnersManager = lazy(() => import('./pages/admin/PartnersManager').then(m => ({ default: m.PartnersManager })));
 
+import { useGoogleAnalytics } from './hooks/useGoogleAnalytics';
+
 // Separate component to handle the conditional modal rendering inside the Router context
 function AppContent() {
+  useGoogleAnalytics();
   const match = useMatch('/project/:id');
   const location = useLocation();
 

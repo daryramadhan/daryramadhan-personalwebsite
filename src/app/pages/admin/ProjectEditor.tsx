@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Editor } from '../../components/admin/Editor';
 import { projects } from '../../data/projects';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Save, Upload } from 'lucide-react';
+import { ArrowLeft, Save, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function ProjectEditor() {
@@ -113,36 +113,8 @@ export function ProjectEditor() {
         }
     };
 
-    const handleCoverImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        try {
-            const file = event.target.files?.[0];
-            if (!file) return;
-
-            setLoading(true);
-            const fileExt = file.name.split('.').pop();
-            const fileName = `cover-${Math.random().toString(36).substring(7)}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            const { error: uploadError } = await supabase.storage
-                .from('project-images')
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            const { data } = supabase.storage
-                .from('project-images')
-                .getPublicUrl(filePath);
-
-            if (data) {
-                setFormData(prev => ({ ...prev, image: data.publicUrl }));
-            }
-        } catch (error) {
-            console.error('Error uploading cover:', error);
-            alert('Error uploading cover image');
-        } finally {
-            setLoading(false);
-        }
-    };
+    // Cloudinary and Supabase uploads removed to save bandwidth.
+    // The user will manually copy images to public/images/ locally and input the relative URL.
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -265,17 +237,55 @@ export function ProjectEditor() {
 
                         <div>
                             <label className="block text-xs font-medium mb-1 text-gray-600">Cover Image</label>
-
-                            {/* File Upload UI */}
-                            <div className="mb-3">
-                                <label className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors w-full justify-center">
-                                    <Upload size={16} className="text-gray-500" />
-                                    <span className="text-sm text-gray-600 font-medium">Upload Image</span>
-                                    <input
-                                        type="file"
+                            
+                            <div className="mb-4">
+                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg className="w-8 h-8 mb-3 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                        </svg>
+                                        <p className="mb-1 text-sm text-gray-500"><span className="font-semibold text-gray-700">Click to upload</span> to Cloudflare R2</p>
+                                        <p className="text-xs text-gray-400">PNG, JPG or WebP</p>
+                                    </div>
+                                    <input 
+                                        type="file" 
+                                        className="hidden" 
                                         accept="image/*"
-                                        onChange={handleCoverImageUpload}
-                                        className="hidden"
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+                                            
+                                            try {
+                                                const btn = e.target.closest('label');
+                                                if (btn) btn.style.opacity = '0.5';
+
+                                                // 1. Get Presigned URL
+                                                const res = await fetch('/.netlify/functions/upload', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ filename: file.name, contentType: file.type })
+                                                });
+                                                
+                                                const data = await res.json();
+                                                if (data.error) throw new Error(data.error);
+                                                
+                                                // 2. Upload directly to R2
+                                                await fetch(data.uploadUrl, {
+                                                    method: 'PUT',
+                                                    headers: { 'Content-Type': file.type },
+                                                    body: file
+                                                });
+                                                
+                                                // 3. Update form state
+                                                setFormData({ ...formData, image: data.publicUrl });
+                                            } catch (err) {
+                                                alert("Failed to upload image. Check console for details.");
+                                                console.error(err);
+                                            } finally {
+                                                const btn = e.target.closest('label');
+                                                if (btn) btn.style.opacity = '1';
+                                            }
+                                        }}
                                     />
                                 </label>
                             </div>

@@ -1,7 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProjects } from '../../hooks/useProjects';
 import { Link } from 'react-router-dom';
-import { Edit, Trash2, Eye } from 'lucide-react';
+import { Edit, Trash2, Eye, HardDrive, AlertCircle } from 'lucide-react';
+
+function StorageWidget() {
+    const [stats, setStats] = useState<{ usedBytes: number; maxBytes: number; percentage: number; fileCount: number } | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        fetch('/.netlify/functions/storage-stats')
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                setStats(data);
+            })
+            .catch(err => setError(err.message))
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) return <div className="h-24 bg-gray-50 animate-pulse rounded-xl border border-gray-100 mb-8"></div>;
+    if (error) return <div className="h-24 bg-red-50 text-red-600 flex items-center px-6 rounded-xl border border-red-100 mb-8 text-sm"><AlertCircle className="w-4 h-4 mr-2" /> Error loading storage: {error}</div>;
+    if (!stats) return null;
+
+    const usedGB = (stats.usedBytes / (1024 ** 3)).toFixed(2);
+    const maxGB = (stats.maxBytes / (1024 ** 3)).toFixed(0);
+
+    return (
+        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-8">
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <HardDrive className="w-5 h-5 text-gray-500" />
+                    <h3 className="font-medium text-gray-900">Cloudflare R2 Storage</h3>
+                </div>
+                <div className="text-sm text-gray-500">
+                    <span className="font-semibold text-gray-900">{usedGB} GB</span> / {maxGB} GB
+                </div>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                <div 
+                    className={`h-2.5 rounded-full ${stats.percentage > 90 ? 'bg-red-500' : 'bg-black'}`} 
+                    style={{ width: `${Math.min(stats.percentage, 100)}%` }}
+                ></div>
+            </div>
+            <div className="mt-3 text-xs text-gray-500 flex justify-between">
+                <span>{stats.fileCount} images uploaded</span>
+                <span>{stats.percentage.toFixed(2)}% used</span>
+            </div>
+        </div>
+    );
+}
 
 export function Dashboard() {
     const { projects, loading, deleteProject, togglePublish } = useProjects();
@@ -38,6 +86,8 @@ export function Dashboard() {
                     Create New
                 </Link>
             </div>
+
+            <StorageWidget />
 
             <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
                 <table className="w-full text-left">

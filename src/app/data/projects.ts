@@ -13,9 +13,4 @@ export interface Project {
   is_published?: boolean;
 }
 
-export const projects: Project[] = [
-
-
-
-
-];
+export const projects: Project[] = [];

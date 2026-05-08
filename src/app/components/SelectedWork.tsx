@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom';
 import { useProjects } from '../hooks/useProjects';
 
 export function SelectedWork() {
-  const { projects } = useProjects();
+  const { projects, loading, error } = useProjects();
   // Filter selected works
   // Logic: If it has project_type 'selected_work', OR if it's NOT a case study (legacy fallback)
   const selectedWorks = projects.filter((p, i) =>
     p.is_published !== false && (p.project_type === 'selected_work' || (!p.project_type && i >= 3))
   );
+  const hasNoWork = error || (!loading && selectedWorks.length === 0);
 
   return (
     <section id="projects" className="py-24 bg-gray-50">
@@ -45,44 +46,61 @@ export function SelectedWork() {
             </motion.div>
           </div>
 
-          {/* Right Column: The Bento Grid */}
+          {/* Right Column: The Bento Grid or Fallback */}
           <div className="lg:col-span-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {selectedWorks.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  className={`group relative overflow-hidden rounded-none bg-gray-200 ${project.className}`}
-                >
-                  <Link to={`/project/${project.id}`} className="block w-full h-full">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      loading="lazy"
-                      className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
-                    />
+            {hasNoWork ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="w-full aspect-[2/1] bg-gray-100 flex flex-col items-center justify-center text-center p-12"
+              >
+                <div className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center mb-6">
+                  <span className="block w-1.5 h-1.5 rounded-full bg-gray-400" />
+                </div>
+                <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-3">Portfolio Updating</p>
+                <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
+                  Selected works are being refreshed. Check back soon.
+                </p>
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {selectedWorks.map((project, index) => (
+                  <motion.div
+                    key={project.id}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.6 }}
+                    className={`group relative overflow-hidden rounded-none bg-gray-200 ${project.className}`}
+                  >
+                    <Link to={`/project/${project.id}`} className="block w-full h-full">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
+                      />
 
-                    {/* Overlay - Minimalist Style */}
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      {/* Overlay - Minimalist Style */}
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/90 via-black/50 to-transparent md:from-black/80 md:via-transparent">
-                      <div className="flex justify-between items-end">
-                        <div className="text-white">
-                          <span className="text-xs font-mono uppercase tracking-wider opacity-80 mb-2 block">{project.category} — {project.year}</span>
-                          <h3 className="text-2xl font-medium">{project.title}</h3>
-                        </div>
-                        <div className="bg-white text-black p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                          <ArrowUpRight size={20} />
+                      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/90 via-black/50 to-transparent md:from-black/80 md:via-transparent">
+                        <div className="flex justify-between items-end">
+                          <div className="text-white">
+                            <span className="text-xs font-mono uppercase tracking-wider opacity-80 mb-2 block">{project.category} — {project.year}</span>
+                            <h3 className="text-2xl font-medium">{project.title}</h3>
+                          </div>
+                          <div className="bg-white text-black p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <ArrowUpRight size={20} />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>

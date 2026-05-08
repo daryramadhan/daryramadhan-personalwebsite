@@ -6,7 +6,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { useProjects } from '../hooks/useProjects';
 
 export function CaseStudies() {
-  const { projects } = useProjects();
+  const { projects, loading, error } = useProjects();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
@@ -95,50 +95,70 @@ export function CaseStudies() {
             </div>
           </div>
 
-          {/* Right Column: Embla Carousel */}
-          <div className="lg:col-span-8 overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4 touch-pan-y">
-              {caseStudies.map((project, index) => (
-                <div
-                  key={project.id}
-                  className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] group"
-                >
-                  <Link to={`/project/${project.id}`} className="block">
-                    <div className="aspect-[4/3] overflow-hidden bg-gray-100 mb-4 relative">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      {/* Mobile gradient for text contrast */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-
-                    <div className="flex justify-between items-start border-b border-gray-200 pb-3 group-hover:border-black transition-colors duration-300">
-                      <div>
-                        <h3 className="text-2xl font-medium text-gray-900 mb-2">{project.title}</h3>
-                        <p className="text-xs font-mono uppercase tracking-wider text-gray-500">{project.category}</p>
-                      </div>
-                      <span className="text-xs font-mono text-gray-400">{project.year}</span>
-                    </div>
-                  </Link>
+          {/* Right Column: Embla Carousel or Fallback State */}
+          {(error || (!loading && caseStudies.length === 0)) ? (
+            // Graceful fallback when Supabase is unavailable
+            <div className="lg:col-span-8 flex items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="w-full aspect-[2/1] lg:aspect-[16/7] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center p-12"
+              >
+                <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center mb-6">
+                  <span className="block w-1.5 h-1.5 rounded-full bg-gray-300" />
                 </div>
-              ))}
+                <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-3">Portfolio Updating</p>
+                <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
+                  Case studies are being refreshed. Check back soon.
+                </p>
+              </motion.div>
+            </div>
+          ) : (
+            <div className="lg:col-span-8 overflow-hidden" ref={emblaRef}>
+              <div className="flex gap-4 touch-pan-y">
+                {caseStudies.map((project, index) => (
+                  <div
+                    key={project.id}
+                    className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] group"
+                  >
+                    <Link to={`/project/${project.id}`} className="block">
+                      <div className="aspect-[4/3] overflow-hidden bg-gray-100 mb-4 relative">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        {/* Mobile gradient for text contrast */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
 
-              {/* View All Card */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] flex items-center justify-center">
-                <a href="#work" className="group flex flex-col items-center justify-center w-full h-full aspect-[4/3] bg-gray-50 border border-gray-200 hover:bg-black hover:border-black transition-all duration-300">
-                  <span className="text-2xl font-medium text-gray-900 group-hover:text-white mb-3">View All</span>
-                  <div className="w-10 h-10 rounded-full border border-gray-300 group-hover:border-white/30 flex items-center justify-center text-gray-900 group-hover:text-white transition-colors">
-                    <ArrowRight size={18} />
+                      <div className="flex justify-between items-start border-b border-gray-200 pb-3 group-hover:border-black transition-colors duration-300">
+                        <div>
+                          <h3 className="text-2xl font-medium text-gray-900 mb-2">{project.title}</h3>
+                          <p className="text-xs font-mono uppercase tracking-wider text-gray-500">{project.category}</p>
+                        </div>
+                        <span className="text-xs font-mono text-gray-400">{project.year}</span>
+                      </div>
+                    </Link>
                   </div>
-                </a>
+                ))}
+
+                {/* View All Card */}
+                <div className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] flex items-center justify-center">
+                  <a href="#work" className="group flex flex-col items-center justify-center w-full h-full aspect-[4/3] bg-gray-50 border border-gray-200 hover:bg-black hover:border-black transition-all duration-300">
+                    <span className="text-2xl font-medium text-gray-900 group-hover:text-white mb-3">View All</span>
+                    <div className="w-10 h-10 rounded-full border border-gray-300 group-hover:border-white/30 flex items-center justify-center text-gray-900 group-hover:text-white transition-colors">
+                      <ArrowRight size={18} />
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

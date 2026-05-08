@@ -5,3 +5,6 @@ dist
 *.zip
 *.log
 .system_generated
+
+# Local Netlify folder
+.netlify

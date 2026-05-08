@@ -5,6 +5,7 @@ import { projects as staticProjects, Project } from '../data/projects';
 export function useProjects() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -16,9 +17,13 @@ export function useProjects() {
 
                 if (error) {
                     console.error('Error fetching projects:', error);
-                    // Fallback to static data if error (or empty for now, user choice)
-                    // merging static and dynamic for demo purposes
-                    setProjects([...(data || []) as Project[], ...staticProjects]);
+                    // If static projects exist use them, otherwise mark as error
+                    if (staticProjects.length > 0) {
+                        setProjects(staticProjects);
+                    } else {
+                        setError(true);
+                        setProjects([]);
+                    }
                 } else {
                     // Combine DB projects with static ones, prioritizing DB versions
                     const dbProjects = (data || []).map((p: any) => ({
@@ -30,10 +35,16 @@ export function useProjects() {
                     const filteredStaticProjects = staticProjects.filter(p => !dbIds.has(p.id));
 
                     setProjects([...dbProjects, ...filteredStaticProjects]);
+                    setError(false);
                 }
             } catch (err) {
                 console.error('Unexpected error:', err);
-                setProjects(staticProjects);
+                if (staticProjects.length > 0) {
+                    setProjects(staticProjects);
+                } else {
+                    setError(true);
+                    setProjects([]);
+                }
             } finally {
                 setLoading(false);
             }
@@ -84,7 +95,7 @@ export function useProjects() {
         }
     };
 
-    return { projects, loading, deleteProject, togglePublish };
+    return { projects, loading, error, deleteProject, togglePublish };
 }
 
 // Helper to map DB project to Frontend Project interface

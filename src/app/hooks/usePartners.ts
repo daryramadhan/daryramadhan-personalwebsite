@@ -38,24 +38,8 @@ export function usePartners() {
         fetchPartners();
     }, []);
 
-    const addPartner = async (name: string, logoFile: File) => {
+    const addPartner = async (name: string, logoUrl: string) => {
         try {
-            // Upload logo to storage
-            const fileExt = logoFile.name.split('.').pop();
-            const fileName = `partner-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-            const { error: uploadError } = await supabase.storage
-                .from('project-images')
-                .upload(fileName, logoFile);
-
-            if (uploadError) throw uploadError;
-
-            const { data: urlData } = supabase.storage
-                .from('project-images')
-                .getPublicUrl(fileName);
-
-            if (!urlData) throw new Error('Failed to get public URL');
-
             // Get the next sort order
             const maxOrder = partners.length > 0
                 ? Math.max(...partners.map(p => p.sort_order))
@@ -66,7 +50,7 @@ export function usePartners() {
                 .from('partners')
                 .insert({
                     name,
-                    logo_url: urlData.publicUrl,
+                    logo_url: logoUrl,
                     sort_order: maxOrder + 1,
                 })
                 .select()

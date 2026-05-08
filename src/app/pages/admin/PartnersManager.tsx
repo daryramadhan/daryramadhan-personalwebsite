@@ -1,54 +1,23 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { usePartners } from '../../hooks/usePartners';
-import { Trash2, ChevronUp, ChevronDown, Upload, Info, ImageIcon } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, Info, ImageIcon } from 'lucide-react';
 
 export function PartnersManager() {
     const { partners, loading, addPartner, deletePartner, movePartner } = usePartners();
     const [name, setName] = useState('');
-    const [logoFile, setLogoFile] = useState<File | null>(null);
-    const [logoPreview, setLogoPreview] = useState<string | null>(null);
+    const [logoUrl, setLogoUrl] = useState('');
     const [saving, setSaving] = useState(false);
-    const [isDragging, setIsDragging] = useState(false);
     const [deleteModal, setDeleteModal] = useState<{ id: string; name: string } | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileSelect = (file: File) => {
-        setLogoFile(file);
-        const reader = new FileReader();
-        reader.onload = (e) => setLogoPreview(e.target?.result as string);
-        reader.readAsDataURL(file);
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) handleFileSelect(file);
-    };
-
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
-
-    const handleDragLeave = () => setIsDragging(false);
-
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-        const file = e.dataTransfer.files?.[0];
-        if (file && file.type.startsWith('image/')) {
-            handleFileSelect(file);
-        }
-    };
+// file handlers removed to support local path mechanism
 
     const handleAdd = async () => {
-        if (!name.trim() || !logoFile) return;
+        if (!name.trim() || !logoUrl.trim()) return;
         setSaving(true);
-        const success = await addPartner(name.trim(), logoFile);
+        const success = await addPartner(name.trim(), logoUrl.trim());
         if (success) {
             setName('');
-            setLogoFile(null);
-            setLogoPreview(null);
-            if (fileInputRef.current) fileInputRef.current.value = '';
+            setLogoUrl('');
         }
         setSaving(false);
     };
@@ -97,41 +66,74 @@ export function PartnersManager() {
                         />
                     </div>
 
-                    {/* Logo upload */}
+                    {/* Logo Path */}
                     <div>
-                        <label className="block text-xs font-medium mb-1.5 text-gray-600">Logo</label>
-                        <div
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
-                            onClick={() => fileInputRef.current?.click()}
-                            className={`flex items-center gap-3 px-4 py-2.5 border border-dashed rounded-lg cursor-pointer transition-all text-sm ${isDragging
-                                ? 'border-black bg-gray-100'
-                                : 'border-gray-300 hover:bg-gray-50'
-                                }`}
-                        >
-                            {logoPreview ? (
-                                <img src={logoPreview} alt="Logo preview" className="h-8 max-w-[120px] object-contain" />
-                            ) : (
-                                <Upload size={16} className="text-gray-400" />
-                            )}
-                            <span className="text-gray-500 truncate">
-                                {logoFile ? logoFile.name : 'Drop logo or click to upload'}
-                            </span>
+                        <label className="block text-xs font-medium mb-1.5 text-gray-600">Logo Upload (Cloudflare R2)</label>
+                        <div className="relative">
                             <input
-                                ref={fileInputRef}
                                 type="file"
-                                accept="image/*"
-                                onChange={handleFileChange}
+                                id="partner-logo-upload"
                                 className="hidden"
+                                accept="image/*"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    
+                                    try {
+                                        const label = document.getElementById('partner-logo-label');
+                                        if (label) label.innerText = 'Uploading...';
+
+                                        // 1. Get Presigned URL
+                                        const res = await fetch('/.netlify/functions/upload', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ filename: file.name, contentType: file.type })
+                                        });
+                                        
+                                        const data = await res.json();
+                                        if (data.error) throw new Error(data.error);
+                                        
+                                        // 2. Upload directly to R2
+                                        await fetch(data.uploadUrl, {
+                                            method: 'PUT',
+                                            headers: { 'Content-Type': file.type },
+                                            body: file
+                                        });
+                                        
+                                        // 3. Update form state
+                                        setLogoUrl(data.publicUrl);
+                                    } catch (err) {
+                                        alert("Failed to upload image. Check console for details.");
+                                        console.error(err);
+                                    } finally {
+                                        const label = document.getElementById('partner-logo-label');
+                                        if (label) label.innerText = 'Upload Logo';
+                                    }
+                                }}
                             />
+                            <div className="flex gap-2 items-center">
+                                <label 
+                                    htmlFor="partner-logo-upload"
+                                    id="partner-logo-label"
+                                    className="px-4 py-2.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-200 transition-colors border border-gray-200 whitespace-nowrap"
+                                >
+                                    Upload Logo
+                                </label>
+                                <input
+                                    type="text"
+                                    value={logoUrl}
+                                    onChange={(e) => setLogoUrl(e.target.value)}
+                                    className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 text-sm"
+                                    placeholder="Or paste URL here"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <button
                     onClick={handleAdd}
-                    disabled={!name.trim() || !logoFile || saving}
+                    disabled={!name.trim() || !logoUrl.trim() || saving}
                     className="mt-5 px-5 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                     {saving ? 'Adding...' : 'Add Partner'}

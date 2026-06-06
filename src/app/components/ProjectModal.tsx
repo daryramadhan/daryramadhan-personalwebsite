@@ -125,12 +125,14 @@ export function ProjectModal({ projectId }: ProjectModalProps) {
                 <h3 className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Role</h3>
                 <p className="text-sm font-medium text-gray-900">{project.role || "Design & Development"}</p>
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <h3 className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Link</h3>
-                <a href="#" className="inline-flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors">
-                  Visit Live Site <ArrowUpRight size={14} />
-                </a>
-              </div>
+              {project.live_link && (
+                <div className="col-span-2 md:col-span-1">
+                  <h3 className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Link</h3>
+                  <a href={project.live_link.startsWith('http') ? project.live_link : `https://${project.live_link}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors">
+                    Visit Live Site <ArrowUpRight size={14} />
+                  </a>
+                </div>
+              )}
             </div>
 
             {/* Overview / Blog Content */}

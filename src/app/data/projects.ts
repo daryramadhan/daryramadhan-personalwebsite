@@ -11,6 +11,7 @@ export interface Project {
   project_type?: 'case_study' | 'selected_work';
   className?: string; // For grid layout in SelectedWork
   is_published?: boolean;
+  live_link?: string;
 }
 
 export const projects: Project[] = [];

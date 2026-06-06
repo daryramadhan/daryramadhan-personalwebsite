@@ -23,6 +23,7 @@ export function ProjectEditor() {
         client: '',
         className: '', // For grid layout
         is_published: true, // Default
+        live_link: '',
     });
 
     useEffect(() => {
@@ -42,6 +43,7 @@ export function ProjectEditor() {
                     client: project.client || '',
                     className: project.className || '',
                     is_published: project.is_published ?? true,
+                    live_link: project.live_link || '',
                 })
             } else {
                 // Try fetching from supabase
@@ -65,6 +67,7 @@ export function ProjectEditor() {
                             client: data.client || '',
                             className: data.class_name || '', // Map class_name from DB to className in form
                             is_published: data.is_published ?? true,
+                            live_link: data.live_link || '',
                         });
                     }
                 };
@@ -87,6 +90,7 @@ export function ProjectEditor() {
                 client: formData.client,
                 class_name: formData.className, // Map form className to DB class_name
                 is_published: formData.is_published,
+                live_link: formData.live_link,
                 // updated_at: new Date().toISOString(), // Column not in DB yet
             };
 
@@ -217,6 +221,17 @@ export function ProjectEditor() {
                                 onChange={(e) => setFormData({ ...formData, client: e.target.value })}
                                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 text-sm"
                                 placeholder="e.g. Adobe"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-medium mb-1 text-gray-600">Live Link</label>
+                            <input
+                                type="text"
+                                value={formData.live_link}
+                                onChange={(e) => setFormData({ ...formData, live_link: e.target.value })}
+                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 text-sm"
+                                placeholder="e.g. https://example.com"
                             />
                         </div>
 

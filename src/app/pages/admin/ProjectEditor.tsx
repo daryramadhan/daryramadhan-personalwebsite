@@ -278,8 +278,9 @@ export function ProjectEditor() {
                                                 
                                                 // 3. Update form state
                                                 setFormData({ ...formData, image: data.publicUrl });
-                                            } catch (err) {
-                                                alert("Failed to upload image. Check console for details.");
+                                            } catch (err: any) {
+                                                const errorMessage = err instanceof Error ? err.message : String(err);
+                                                alert(`Failed to upload image: ${errorMessage}\n\nCheck console for details.`);
                                                 console.error(err);
                                             } finally {
                                                 const btn = e.target.closest('label');

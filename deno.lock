@@ -63,6 +63,7 @@
         "npm:input-otp@1.4.2",
         "npm:lucide-react@0.487.0",
         "npm:motion@12.23.24",
+        "npm:netlify-cli@^26.0.2",
         "npm:next-themes@0.4.6",
         "npm:react-day-picker@8.10.1",
         "npm:react-dnd-html5-backend@16.0.1",

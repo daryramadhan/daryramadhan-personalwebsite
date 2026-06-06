@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "serve": "netlify dev"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1041.0",
@@ -77,6 +78,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
+    "netlify-cli": "^26.0.2",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },

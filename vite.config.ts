@@ -25,4 +25,16 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+  
+  // Enforce port 5173 for Netlify dev proxy
+  server: {
+    port: 5173,
+    strictPort: true, // Fail if port is in use rather than jumping to 5174
+    proxy: {
+      '/.netlify/functions': {
+        target: 'http://localhost:8888',
+        changeOrigin: true,
+      }
+    }
+  }
 })

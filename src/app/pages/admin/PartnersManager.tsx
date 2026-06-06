@@ -102,10 +102,11 @@ export function PartnersManager() {
                                         
                                         // 3. Update form state
                                         setLogoUrl(data.publicUrl);
-                                    } catch (err) {
-                                        alert("Failed to upload image. Check console for details.");
-                                        console.error(err);
-                                    } finally {
+                                        } catch (err: any) {
+                                            const errorMessage = err instanceof Error ? err.message : String(err);
+                                            alert(`Failed to upload image: ${errorMessage}\n\nCheck console for details.`);
+                                            console.error(err);
+                                        } finally {
                                         const label = document.getElementById('partner-logo-label');
                                         if (label) label.innerText = 'Upload Logo';
                                     }

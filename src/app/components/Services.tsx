@@ -3,8 +3,8 @@ import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 
 const stats = [
-  { value: '20+', label: 'Satisfied Clients' },
-  { value: '42', label: 'Projects' },
+  { value: '22+', label: 'Satisfied Clients' },
+  { value: '44', label: 'Projects' },
   { value: '4', label: 'Industries' },
   { value: '4.7', label: 'Fastwork Rating' },
 ];
